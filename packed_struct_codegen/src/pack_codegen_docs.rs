@@ -56,16 +56,15 @@ pub fn struct_runtime_formatter(parsed: &PackStruct) -> syn::Result<proc_macro2:
     let result_ty = result_type();
 
     let q = quote! {
-        #[doc(hidden)]
-        pub fn #debug_fields_fn(src: &#name) -> [::packed_struct::debug_fmt::DebugBitField<'static>; #num_fields] {
-            [#(#debug_fields),*]
-        }
-
         #[allow(unused_imports)]
         impl #impl_generics ::packed_struct::debug_fmt::PackedStructDebug for #name #ty_generics #where_clause {
             fn fmt_fields(&self, fmt: &mut #stdlib_prefix::fmt::Formatter) -> #result_ty <(), #stdlib_prefix::fmt::Error> {
                 use ::packed_struct::PackedStruct;
-                
+
+                fn #debug_fields_fn(src: &#name) -> [::packed_struct::debug_fmt::DebugBitField<'static>; #num_fields] {
+                    [#(#debug_fields),*]
+                }
+
                 let fields = #debug_fields_fn(self);
                 let packed: [u8; #num_bytes] = self.pack()?;
                 ::packed_struct::debug_fmt::packable_fmt_fields(fmt, &packed, &fields)
