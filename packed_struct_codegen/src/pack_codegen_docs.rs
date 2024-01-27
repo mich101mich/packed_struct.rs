@@ -74,15 +74,6 @@ pub fn struct_runtime_formatter(parsed: &PackStruct) -> syn::Result<proc_macro2:
                 #display_header
             }
         }
-
-        #[allow(unused_imports)]
-        impl #impl_generics #stdlib_prefix::fmt::Display for #name #ty_generics #where_clause {
-            #[allow(unused_imports)]
-            fn fmt(&self, f: &mut #stdlib_prefix::fmt::Formatter) -> #stdlib_prefix::fmt::Result {                
-                let display = ::packed_struct::debug_fmt::PackedStructDisplay::new(self);
-                display.fmt(f)
-            }
-        }
     };
     
     Ok(q)
